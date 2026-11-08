@@ -1,32 +1,166 @@
-# EU Tender Intelligence — Easy VS Code Starter
+# EU Tender Intelligence Pipeline
 
-This is **Phase 1** of a real open-source Data Engineering project. It downloads the **10 most recently published** procurement notices from buyers in the Netherlands, using the **official EU TED Search API**. It saves two files:
+An end-to-end Data Engineering portfolio project that collects public European procurement notices, processes them with Python and DuckDB, transforms them using dbt, and generates business-readable IT tender opportunity reports.
 
-- `data/raw_notices.json` — original API response and request
-- `data/tenders.csv` — a simple table that Excel and VS Code can open
+## Project Overview
 
-No Azure account, API key, or paid software is required.
+Organizations searching for public IT contracts often need to review large numbers of procurement notices.
 
-## Steps in VS Code (Windows)
+This project demonstrates how an automated data pipeline can:
 
-1. Extract the ZIP and open the folder **eu-tenders-vscode-simple** in VS Code: **File → Open Folder**.
-2. Open **Terminal → New Terminal**.
-3. Check Python: `py --version` (install Python if Windows doesn't find it).
-4. Install Requests: `py -m pip install requests`
-5. Run: `py main.py`
-6. Click `data/tenders.csv` and `data/raw_notices.json` in the VS Code file explorer.
+- Retrieve public tender information from the EU TED API.
+- Load records incrementally into DuckDB.
+- Extract CPV classification codes and reported deadlines.
+- Identify IT opportunities using both CPV codes and title keywords.
+- Apply automated data-quality tests.
+- Export CSV reports for further business review.
 
-> If `py` is not recognized but `python` is available, substitute `python` for `py` in the commands.
+## Technology Stack
 
-### What does each part do?
-- **API**: A service where our program requests information from TED.
-- **Python**: The language that contacts the API and saves the result.
-- **JSON**: The original structured data from the source.
-- **CSV**: The simplified table for humans or later warehouse processing.
+| Technology | Purpose |
+|------------|---------|
+| Python | API extraction and orchestration |
+| TED Search API | Public procurement data |
+| DuckDB | Analytical data storage |
+| dbt | SQL transformations and testing |
+| Git | Version control |
+| CSV / Excel | Business-readable reports |
 
-## Important limits
+## Architecture
 
-This starter fetches **only the first 10 results** and overwrites the two output files each run. It is deliberately a small teaching example, **not yet an incremental data pipeline**. Later phases will add DuckDB, full pagination, history, dbt transformations and Dagster orchestration.
+```text
+EU TED Search API
+       |
+       v
+Python Extraction (main.py)
+       |
+       v
+Raw JSON and CSV Files
+       |
+       v
+DuckDB Incremental Loading
+       |
+       v
+CPV and Deadline Enrichment
+       |
+       v
+Compatible Reporting Database
+       |
+       v
+dbt Transformations and Tests
+       |
+       v
+IT Opportunity Reporting Mart
+       |
+       v
+CSV Export
+       |
+       +-- all_it_tenders.csv
+       |
+       +-- priority_it_tenders.csv
+```
 
-Source documentation: https://docs.ted.europa.eu/api/latest/search.html
-Data source: EU Publications Office / TED. Not affiliated with TED.
+## Key Features
+
+### Incremental Data Loading
+
+Tender notices are compared against previously stored records.
+
+The pipeline identifies new, changed and unchanged records, reducing unnecessary updates.
+
+### CPV-Based Classification
+
+Official procurement classification codes are combined with title-based matching to identify potential IT opportunities.
+
+### Deadline Review
+
+Reported submission dates are extracted and evaluated.
+
+Missing or multiple values are flagged for review. Candidate deadlines are not treated as confirmation that a tender is still accepting submissions.
+
+### Automated Data Quality
+
+dbt tests validate important conditions such as unique notice identifiers, non-null identifiers, matching classifications and deadline extraction rules.
+
+### Automated Reporting
+
+The pipeline generates two CSV files:
+
+- `all_it_tenders.csv`: All identified IT tender candidates.
+- `priority_it_tenders.csv`: CPV-matched candidates with future reported deadline dates that require source verification.
+
+## Example Results
+
+Results from a successful local pipeline execution on November 6, 2026:
+
+| Metric | Result |
+|--------|--------|
+| IT tender candidates | 145 |
+| Priority review candidates | 61 |
+| Pipeline execution | Successful |
+| CSV reports generated | 2 |
+
+These numbers represent a historical pipeline run, not live tender availability.
+
+## Running the Pipeline
+
+The project was developed on Windows using Python 3.13, DuckDB and dbt OSS with DuckDB support.
+
+A compatible local Python environment and dbt executable are required.
+
+The local dbt profile is stored at:
+
+`dbt_tenders/profiles.yml`
+
+It is excluded from Git because it contains local environment configuration.
+
+The pipeline currently expects dbt at:
+
+`.venv-dbt/Scripts/dbt.exe`
+
+Run the complete workflow from the project root:
+
+```powershell
+py run_full_pipeline.py
+```
+
+Successful execution performs extraction, loading, enrichment, dbt transformations, tests, reporting database publication and CSV export.
+
+Generated reports are stored in:
+
+`data/exports/`
+
+The local `data/` directory and virtual environments are excluded from version control.
+
+## Main Project Files
+
+| File | Purpose |
+|------|---------|
+| main.py | Retrieves TED notices |
+| phase2_load.py | Loads tender records into DuckDB |
+| phase4_load_enriched.py | Loads CPV and deadline data |
+| run_full_pipeline.py | Orchestrates the complete workflow |
+| export_it_report.py | Generates CSV reports |
+| dbt_tenders/models/ | SQL transformation models |
+| dbt_tenders/tests/ | Custom data-quality tests |
+
+## Current Limitations
+
+- The pipeline currently focuses on Dutch procurement notices.
+- CPV and title matching produces candidate opportunities, not guaranteed relevance.
+- Lot-specific deadline relationships require additional modelling.
+- Submission status must be checked against the original TED notice.
+- The current setup uses local execution rather than a cloud scheduler.
+- Dependency pinning and one-command environment setup are planned improvements.
+
+## Data Source
+
+Tender data originates from the European Union's Tenders Electronic Daily (TED) service.
+
+This repository contains source code and transformations, not a continuously maintained public tender database.
+
+## Project Purpose
+
+This project demonstrates practical Data Engineering capabilities in API integration, incremental data ingestion, analytical modelling, data quality and reporting automation.
+
+It is a portfolio demonstration, not an official EU procurement service.
