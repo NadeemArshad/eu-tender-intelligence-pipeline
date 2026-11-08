@@ -1,0 +1,40 @@
+__pycache__/
+.venv/
+data/
+
+# Python generated files
+__pycache__/
+*.py[cod]
+*.log
+
+# Python virtual environments
+.venv/
+.venv-dbt/
+venv/
+
+# Local tender datasets and exports
+data/
+
+# DuckDB databases
+*.duckdb
+*.duckdb.wal
+*.duckdb.tmp
+
+# dbt generated artifacts
+**/target/
+**/dbt_packages/
+**/logs/
+
+# Secrets and local settings
+.env
+.env.*
+!.env.example
+**/.user.yml
+**/profiles.yml
+
+# VS Code local settings
+.vscode/
+
+# Temporary files
+*.tmp
+*.bak

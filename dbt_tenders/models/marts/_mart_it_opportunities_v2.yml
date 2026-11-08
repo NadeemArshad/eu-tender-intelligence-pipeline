@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: mart_it_opportunities_v2
+    description: "IT opportunities identified using CPV codes and title keywords"
+
+    columns:
+      - name: notice_number
+        data_tests:
+          - unique
+          - not_null
+
+      - name: match_source
+        data_tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - "CPV and title"
+                  - "CPV only"
+                  - "Title only"

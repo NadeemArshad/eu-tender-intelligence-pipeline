@@ -1,0 +1,11 @@
+name: eu_tenders_dbt
+version: '1.0.0'
+config-version: 2
+
+profile: eu_tenders_dbt
+
+model-paths: ["models"]
+
+models:
+  eu_tenders_dbt:
+    +materialized: view

@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: mart_it_tender_report
+    description: "Final IT tender opportunities report"
+
+    columns:
+      - name: notice_number
+        data_tests:
+          - unique
+          - not_null

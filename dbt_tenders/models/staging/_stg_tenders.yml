@@ -1,0 +1,12 @@
+version: 2
+
+models:
+  - name: stg_tenders
+    description: "Cleaned EU tender records from TED"
+
+    columns:
+      - name: notice_number
+        description: "Unique identifier of a tender notice"
+        data_tests:
+          - not_null
+          - unique

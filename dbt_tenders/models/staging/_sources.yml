@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+  - name: ted
+    schema: main
+
+    tables:
+      - name: tender_notices
+        description: "Original EU tender information"
+
+      - name: tender_enrichment
+        description: "CPV codes and submission deadline data"
