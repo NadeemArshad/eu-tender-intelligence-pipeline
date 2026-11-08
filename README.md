@@ -164,3 +164,14 @@ This repository contains source code and transformations, not a continuously mai
 This project demonstrates practical Data Engineering capabilities in API integration, incremental data ingestion, analytical modelling, data quality and reporting automation.
 
 It is a portfolio demonstration, not an official EU procurement service.
+
+
+### Detailed Architecture
+
+[View the complete pipeline architecture](docs/architecture.md)
+
+A sample dbt connection configuration is available in
+`dbt_tenders/profiles.example.yml`.
+
+Copy the example to `dbt_tenders/profiles.yml` when setting up
+a new local environment. The actual profile is excluded from Git.

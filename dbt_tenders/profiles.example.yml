@@ -1,0 +1,11 @@
+eu_tenders_dbt:
+  target: dev
+
+  outputs:
+    dev:
+      type: duckdb
+
+      path: "{{ env_var('DBT_TENDER_DB_PATH', '../data/tenders_dbt_refresh.duckdb') }}"
+
+      schema: analytics
+      threads: 1
