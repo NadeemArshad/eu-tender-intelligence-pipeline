@@ -175,3 +175,39 @@ A sample dbt connection configuration is available in
 
 Copy the example to `dbt_tenders/profiles.yml` when setting up
 a new local environment. The actual profile is excluded from Git.
+
+### Installation on Windows
+
+Use Python 3.13.
+
+Create an environment for Python ingestion and reporting:
+
+```powershell
+py -3.13 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+```
+
+Create a separate environment for dbt OSS:
+
+```powershell
+py -3.13 -m venv .venv-dbt
+.\.venv-dbt\Scripts\python.exe -m pip install -r requirements-dbt.txt
+```
+
+Create the local dbt profile:
+
+```powershell
+Copy-Item dbt_tenders\profiles.example.yml dbt_tenders\profiles.yml
+```
+
+Run the complete pipeline from the project root:
+
+```powershell
+.\.venv\Scripts\python.exe run_full_pipeline.py
+```
+
+An internet connection is required to retrieve TED notices.
+dbt may also download its database driver on first use.
+
+The pipeline generates data and reporting files locally.
+These files are excluded from Git.
