@@ -38,3 +38,9 @@ data/
 # Temporary files
 *.tmp
 *.bak
+
+# Streamlit dashboard environment
+.venv-dashboard/
+
+# Local Streamlit secrets
+.streamlit/secrets.toml
