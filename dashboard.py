@@ -1,5 +1,5 @@
 from pathlib import Path
-
+from datetime import datetime
 import pandas as pd
 import streamlit as st
 
@@ -45,6 +45,15 @@ df = pd.read_csv(
     encoding="utf-8-sig",
     dtype=str
 ).fillna("")
+# Show when the CSV file was last modified
+last_modified = datetime.fromtimestamp(
+    all_file.stat().st_mtime
+)
+
+st.caption(
+    "Report file last updated (computer local time): "
+    + last_modified.strftime("%d %B %Y, %H:%M")
+)
 
 if priority_file.exists():
     priority_df = pd.read_csv(
@@ -135,7 +144,8 @@ if filtered.empty:
     st.info("No tenders match the selected filters.")
 
 else:
-    chart1, chart2 = st.columns(2)
+    chart1 = st.container()
+    chart2 = st.container()
 
     # Chart 1: IT matching methods
     with chart1:
@@ -146,7 +156,11 @@ else:
             .value_counts()
         )
 
-        st.bar_chart(method_counts, height=300)
+        st.bar_chart(
+            method_counts,
+            horizontal=True,
+            height=250
+            )
 
     # Chart 2: Deadline review status
     with chart2:
@@ -157,7 +171,11 @@ else:
             .value_counts()
         )
 
-        st.bar_chart(deadline_counts, height=300)
+        st.bar_chart(
+            deadline_counts,
+            horizontal=True,
+            height=300
+            )
 
     # Chart 3: CPV classification statistics
     st.markdown("#### IT CPV Classification")
@@ -201,7 +219,11 @@ else:
             cpv_data["division"].value_counts()
         )
 
-        st.bar_chart(cpv_counts, height=280)
+        st.bar_chart(
+            cpv_counts,
+            horizontal=True,
+            height=230
+            )
 
         st.caption(
             "Counts represent distinct tender notices per CPV "
